@@ -36,9 +36,20 @@
 A suitable [conda](https://conda.io/) environment named `ldm` can be created
 and activated with:
 
+Env fix @https://github.com/CompVis/latent-diffusion/issues/207#issuecomment-1378716088
 ```
 conda env create -f environment.yaml
 conda activate ldm
+pip install packaging==21.3
+pip install 'torchmetrics<0.8'
+```
+
+Also from @https://github.com/CompVis/latent-diffusion/issues/207#issuecomment-1502057765
+```
+However, I also encounter the error from torch._six import string_classes ModuleNotFoundError: No module named 'torch._six'
+Doing the following step is helpful for me: (reference pytorch/pytorch#94709)
+from torch._six import string_classes
+-> delete this import and replace string_classes with str
 ```
 
 # Pretrained Models
