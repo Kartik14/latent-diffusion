@@ -3,20 +3,20 @@ model:
   target: ldm.models.autoencoder.AutoencoderKLWithJePA
   params:
     monitor: "val/rec_loss"
-    embed_dim: 64
+    embed_dim: 16
     encoder_ckpt: 'jepa_weights/vit_huge_14.pth'
     image_size: 224
     patch_size: 14
     lossconfig:
       target: ldm.modules.losses.LPIPSWithDiscriminator
       params:
-        disc_start: 50001
+        disc_start: 15001
         kl_weight: 0.000001
         disc_weight: 0.5
 
     ddconfig:
       double_z: True
-      z_channels: 64
+      z_channels: 16
       resolution: 256
       in_channels: 3
       out_ch: 3
@@ -32,17 +32,19 @@ data:
     batch_size: 12
     wrap: True
     train:
-      target: ldm.data.imagenet.ImageNetSRTrain
+      target: ldm.data.mscoco.MSCOCODataset
       params:
         size: 224
         out_size: 256
-        degradation: pil_nearest
+        data_dir: '/usr1/data/dataset/mscoco2017'
+        split: 'train'
     validation:
-      target: ldm.data.imagenet.ImageNetSRValidation
+      target: ldm.data.mscoco.MSCOCODataset
       params:
         size: 224
         out_size: 256
-        degradation: pil_nearest
+        data_dir: '/usr1/data/dataset/mscoco2017'
+        split: 'val'
 
 lightning:
   callbacks:
@@ -56,4 +58,3 @@ lightning:
   trainer:
     benchmark: True
     accumulate_grad_batches: 2
-

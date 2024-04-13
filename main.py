@@ -608,19 +608,6 @@ if __name__ == "__main__":
 
         # model
         model = instantiate_from_config(config.model)
-        # load encoder params from checkpoint
-        print("Loading JEPA encoder params from checkpoint")
-        r_file = "weights/target_encoder.pth"
-        checkpoint = torch.load(r_file, map_location="cuda")
-        updated_checkpoint = {}
-        for k, v in checkpoint.items():
-            updated_checkpoint[k.replace("module.", "")] = v
-        model.encoder.load_state_dict(updated_checkpoint)
-
-        # freeze encoder weights
-        for param in model.encoder.parameters():
-            param.requires_grad = False
-        print(model)
 
         # trainer and callbacks
         trainer_kwargs = dict()
@@ -748,6 +735,7 @@ if __name__ == "__main__":
         ]
 
         trainer = Trainer.from_argparse_args(trainer_opt, **trainer_kwargs)
+
         trainer.logdir = logdir  ###
 
         # data

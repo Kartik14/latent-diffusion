@@ -31,12 +31,12 @@ data:
     train:
       target: ldm.data.imagenet.ImageNetSRTrain
       params:
-        size: 256
+        size: 224
         degradation: pil_nearest
     validation:
       target: ldm.data.imagenet.ImageNetSRValidation
       params:
-        size: 256
+        size: 224
         degradation: pil_nearest
 
 lightning:
