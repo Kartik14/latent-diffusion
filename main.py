@@ -364,6 +364,8 @@ class ImageLogger(Callback):
         self.log_on_batch_idx = log_on_batch_idx
         self.log_images_kwargs = log_images_kwargs if log_images_kwargs else {}
         self.log_first_step = log_first_step
+        self.IMAGENET_DEFAULT_MEAN = (0.485, 0.456, 0.406)
+        self.IMAGENET_DEFAULT_STD = (0.229, 0.224, 0.225)
 
     @rank_zero_only
     def _testtube(self, pl_module, images, batch_idx, split):
@@ -648,12 +650,14 @@ if __name__ == "__main__":
                 "filename": "{epoch:06}",
                 "verbose": True,
                 "save_last": True,
+                "every_n_epochs": 10,
+                # "save_top_k": 4,
             },
         }
         if hasattr(model, "monitor"):
             print(f"Monitoring {model.monitor} as checkpoint metric.")
             default_modelckpt_cfg["params"]["monitor"] = model.monitor
-            default_modelckpt_cfg["params"]["save_top_k"] = 3
+            default_modelckpt_cfg["params"]["save_top_k"] = -1
 
         if "modelcheckpoint" in lightning_config:
             modelckpt_cfg = lightning_config.modelcheckpoint
