@@ -1,31 +1,21 @@
 model:
-  base_learning_rate: 5.0e-6   # set to target_lr by starting main.py with '--scale_lr False'
+  base_learning_rate: 1.0e-5   # set to target_lr by starting main.py with '--scale_lr False'
   target: ldm.models.diffusion.ddpm.LatentDiffusion
   params:
     linear_start: 0.0015
-    linear_end: 0.0155
+    linear_end: 0.0195
     num_timesteps_cond: 1
     log_every_t: 200
     timesteps: 1000
-    loss_type: l1
-    first_stage_key: "relative_file_path_"
-    cond_stage_key: "image"
+    first_stage_key: relative_file_path_
+    cond_stage_key: class_label
     image_size: 16
     channels: 16
-    cond_stage_trainable: False
-    concat_mode: False
-    scale_by_std: True
-    monitor: 'val/loss_simple_ema'
-
-    scheduler_config: # 10000 warmup steps
-      target: ldm.lr_scheduler.LambdaLinearScheduler
-      params:
-        warm_up_steps: [10000]
-        cycle_lengths: [10000000000000]
-        f_start: [1.e-6]
-        f_max: [1.]
-        f_min: [1.]
-
+    cond_stage_trainable: true
+    conditioning_key: crossattn
+    monitor: val/loss
+    use_ema: False
+    
     unet_config:
       target: ldm.modules.diffusionmodules.openaimodel.UNetModel
       params:
@@ -33,23 +23,29 @@ model:
         in_channels: 16
         out_channels: 16
         model_channels: 96
-        attention_resolutions: [ 1, 2 ]   # 16, 8, 4
+        attention_resolutions:
+        - 4
+        - 2
         num_res_blocks: 2
-        channel_mult: [ 1,2,4 ]  # 16, 8, 4  
-        num_heads: 6
-        use_scale_shift_norm: True
-        resblock_updown: True
+        channel_mult:
+        - 1
+        - 2
+        - 3
+        num_heads: 1
+        use_spatial_transformer: true
+        transformer_depth: 1
+        context_dim: 32
 
     first_stage_config:
       target: ldm.models.autoencoder.AutoencoderKLWithSavedEmbeds
       params:
         embed_dim: 16
         encoder_dim: 1280
-        train_embeds_dict: "saved_embeds/jepa_afhq_embeds_train.npy"
-        val_embeds_dict: "saved_embeds/jepa_afhq_embeds_val.npy"
-        quant_conv_ckpt: "logs/vae_output_latent_dim_16_kl_0.05_lr_0.01/vae_99.pth"
+        train_embeds_dict: "saved_embeds/mae_mammals_embeds_train.npy"
+        val_embeds_dict: "saved_embeds/mae_mammals_embeds_val.npy"
+        quant_conv_ckpt: "logs/vae_output_latent_dim_16_kl_0.05_lr_0.01_2024-04-28_20-39-18/vae_5.pth"
         monitor: "val/rec_loss"
-        ckpt_path: "logs/2024-04-23T20-46-45_autoencoder_kl_16x16x16_afhq_vae/checkpoints/epoch=000092.ckpt"
+        ckpt_path: logs/2024-04-28T21-18-08_autoencoder_kl_16x16x16_mammals_vae_mae/checkpoints/epoch=000099.ckpt
         ddconfig:
           double_z: True
           z_channels: 16
@@ -64,20 +60,25 @@ model:
         lossconfig:
           target: torch.nn.Identity
 
-    cond_stage_config: "__is_unconditional__"
+    cond_stage_config:
+      target: ldm.modules.encoders.modules.ClassEmbedder
+      params:
+        n_classes: 45
+        embed_dim: 32
+        key: class_label
 
 data:
   target: main.DataModuleFromConfig
   params:
-    batch_size: 96
-    num_workers: 5
-    wrap: False
+    batch_size: 24
+    num_workers: 1
+    wrap: True
     train:
-      target: ldm.data.afhq.AFHQTrain
+      target: ldm.data.mammals.MammalsTrain
       params:
         size: 224
     validation:
-      target: ldm.data.afhq.AFHQVal
+      target: ldm.data.mammals.MammalsVal
       params:
         size: 224
 

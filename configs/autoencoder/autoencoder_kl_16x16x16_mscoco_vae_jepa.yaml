@@ -1,0 +1,60 @@
+model:
+  base_learning_rate: 4.5e-6
+  target: ldm.models.autoencoder.AutoencoderKLWithSavedEmbeds2
+  params:
+    monitor: "val/rec_loss"
+    embed_dim: 16
+    train_embeds_dict: "saved_embeds/jepa_mscoco_train_embeds.npy"
+    val_embeds_dict: "saved_embeds/jepa_mscoco_val_embeds.npy"
+    lossconfig:
+      target: ldm.modules.losses.LPIPSWithDiscriminator
+      params:
+        disc_start: 5000
+        kl_weight: 0.000001
+        disc_weight: 0.5
+
+    ddconfig:
+      double_z: True
+      z_channels: 16
+      resolution: 256
+      in_channels: 3
+      out_ch: 3
+      ch: 128
+      ch_mult: [ 1,1,2,4]  # num_down = len(ch_mult)-1
+      num_res_blocks: 2
+      attn_resolutions: [16]
+      dropout: 0.0
+
+data:
+  target: main.DataModuleFromConfig
+  params:
+    batch_size: 24
+    num_workers: 1
+    wrap: True
+    train:
+      target: ldm.data.mscoco.MSCOCODataset
+      params:
+        data_dir: "data/mscoco2017"
+        split: "train"
+        size: 224
+        out_size: 128
+    validation:
+      target: ldm.data.mscoco.MSCOCODataset
+      params:
+        data_dir: "data/mscoco2017"
+        split: "val"
+        size: 224
+        out_size: 128
+
+lightning:
+  callbacks:
+    image_logger:
+      target: main.ImageLogger
+      params:
+        batch_frequency: 1000
+        max_images: 8
+        increase_log_steps: True
+
+  trainer:
+    benchmark: True
+    accumulate_grad_batches: 2

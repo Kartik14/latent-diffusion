@@ -1,0 +1,58 @@
+model:
+  base_learning_rate: 4.5e-6
+  target: ldm.models.autoencoder.AutoencoderKLWithSavedEmbeds
+  params:
+    monitor: "val/rec_loss"
+    embed_dim: 16
+    encoder_dim: 1280
+    train_embeds_dict: "saved_embeds/jepa_mammals_embeds_train.npy"
+    val_embeds_dict: "saved_embeds/jepa_mammals_embeds_val.npy"
+    quant_conv_ckpt: "logs/vae_output_latent_dim_16_kl_0.05_lr_0.01_2024-04-28_20-38-49/vae_5.pth"
+    lossconfig:
+      target: ldm.modules.losses.LPIPSWithDiscriminator
+      params:
+        disc_start: 5000
+        kl_weight: 0.000001
+        disc_weight: 0.5
+
+    ddconfig:
+      double_z: True
+      z_channels: 16
+      resolution: 256
+      in_channels: 3
+      out_ch: 3
+      ch: 64
+      ch_mult: [ 1,1,2,2]  # num_down = len(ch_mult)-1
+      num_res_blocks: 2
+      attn_resolutions: [16]
+      dropout: 0.0
+
+data:
+  target: main.DataModuleFromConfig
+  params:
+    batch_size: 24
+    num_workers: 1
+    wrap: True
+    train:
+      target: ldm.data.mammals.MammalsTrain
+      params:
+        size: 224
+        out_size: 128
+    validation:
+      target: ldm.data.mammals.MammalsVal
+      params:
+        size: 224
+        out_size: 128
+
+lightning:
+  callbacks:
+    image_logger:
+      target: main.ImageLogger
+      params:
+        batch_frequency: 1000
+        max_images: 8
+        increase_log_steps: True
+
+  trainer:
+    benchmark: True
+    accumulate_grad_batches: 2
