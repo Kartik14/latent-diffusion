@@ -178,8 +178,8 @@ def run(
         n_samples_per_class = n_samples // len(classes)
         print(f"Running conditional sampling for {n_samples} samples")
 
-        ddim_steps = 200
-        ddim_eta = 0.0
+        ddim_steps = custom_steps
+        ddim_eta = eta
         scale = 3.0  # for unconditional guidance
         sampler = DDIMSampler(model)
         all_img = {}
