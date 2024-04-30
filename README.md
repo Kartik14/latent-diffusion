@@ -94,7 +94,7 @@ python train_vae.py --train_data saved_embeds/mae_afhq_embeds_train.npy --val_da
 ```
 For MAE Encoder
 ```
-python train_vae.py --train_data saved_embeds/mae_afhq_embeds_train.npy --val_data saved_embeds/mae_afhq_embeds_val.npy --epochs 10 --learning_rate 0.01
+python train_vae.py --train_data saved_embeds/mae_afhq_embeds_train.npy --val_data saved_embeds/mae_afhq_embeds_val.npy --epochs 10 --learning_rate 0.01 
 ```
 
 
