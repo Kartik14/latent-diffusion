@@ -104,6 +104,4 @@ if __name__ == "__main__":
         for j, image_path in enumerate(batch_paths):
             image_embeddings[image_path] = batch_embed[j].cpu().detach().numpy()
 
-    # np.save(sys.argv[3], image_embeddings)
-    # save compressed
-    np.savez_compressed(sys.argv[3], image_embeddings)
+    np.save(sys.argv[3], image_embeddings)
