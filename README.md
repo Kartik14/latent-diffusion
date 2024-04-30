@@ -6,7 +6,7 @@ This code has been adapted from https://github.com/CompVis/latent-diffusion
 
 ![Unconditional Image Generation with IJEPA and MAE](img/uc_ima.png)
 
-# Setup Environment
+# Environment Setup
 
 To setup the environment, run the following commands
 
@@ -42,13 +42,11 @@ The IJEPA encoder can be downloaded from [here](https://github.com/facebookresea
 
 # Extract and save the encoder embeddings on AFHQ
 
-To extract and save the embeddings for the AFHQ dataset, run the following command:
+To extract and save the embeddings for the AFHQ dataset, run the following commands for train and validation images:
 
 ```
 python get_embds.py jepa_weights/vit_huge_14.pth data/afhq/train.txt jepa_afhq_embeds_train.npy
-```
 
-```
 python get_embds.py jepa_weights/vit_huge_14.pth data/afhq/val.txt jepa_afhq_embeds_val.npy
 ```
 
