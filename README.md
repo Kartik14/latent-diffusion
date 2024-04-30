@@ -17,6 +17,7 @@ This code has been adapted from https://github.com/CompVis/latent-diffusion
 - [Decoder Training](#decoder-training)
 - [Diffusion Model Training](#diffusion-model-training)
 - [Image Generation](#image-generation)
+- [Evaluation](#evaluation)
 
 # Quick Start
 
