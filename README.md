@@ -77,9 +77,9 @@ python get_embds.py jepa_weights/vit_huge_14.pth data/afhq/val.txt jepa_afhq_emb
 
 For MAE Encoder
 ```
-python get_embds.py mae_weights/vit_huge_14.pth data/afhq/train.txt mae_afhq_embeds_train.npy
+python get_embds.py mae_weights/mae_pretrain_vit_huge.pth data/afhq/train.txt mae_afhq_embeds_train.npy
 
-python get_embds.py mae_weights/vit_huge_14.pth data/afhq/val.txt mae_afhq_embeds_val.npy
+python get_embds.py mae_weights/mae_pretrain_vit_huge.pth data/afhq/val.txt mae_afhq_embeds_val.npy
 ```
 
 Assuming the `jepa_weights/vit_huge_14.pth` is the path to the saved IJEPA Encoder. The same can be run for MAE as well.
