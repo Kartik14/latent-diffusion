@@ -1,7 +1,6 @@
 import os
 import argparse
-import datetime
-
+from datetime import datetime
 import numpy as np
 
 import torch
@@ -153,7 +152,7 @@ if __name__ == "__main__":
     parser.add_argument("--latent_dim", type=int, default=16)
     parser.add_argument("--epochs", type=int, default=100)
     parser.add_argument("--learning_rate", type=float, default=0.001)
-    parser.add_argument("--kl_weight", type=float, default=0.001)
+    parser.add_argument("--kl_weight", type=float, default=0.05)
     args = parser.parse_args()
     train_vae(
         args.train_data,

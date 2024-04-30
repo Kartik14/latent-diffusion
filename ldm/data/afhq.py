@@ -28,7 +28,12 @@ class AFHQBase(Dataset):
         self.labels = {
             "relative_file_path_": [l for l in self.image_paths],
             "file_path_": [os.path.join(self.data_root, l) for l in self.image_paths],
+            "human_label": [l.split("/")[1] for l in self.image_paths],
         }
+        self.class2idx = {c: i for i, c in enumerate(set(self.labels["human_label"]))}
+        self.labels["class_label"] = [
+            self.class2idx[c] for c in self.labels["human_label"]
+        ]
         self.size = size
         self.out_size = out_size
         self.interpolation = {
