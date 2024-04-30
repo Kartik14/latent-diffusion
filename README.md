@@ -4,7 +4,7 @@ This code has been adapted from https://github.com/CompVis/latent-diffusion
 
 **Project Title:** Does JEPA really learn high level image features ? An investigation through generative modelling
 
-![Unconditional Image Generation with IJEPA and MAE](img/Screenshot 2024-04-30 at 12.45.22 AM.png)
+![Unconditional Image Generation with IJEPA and MAE](img/uc_ima.png)
 
 # Setup Environment
 
