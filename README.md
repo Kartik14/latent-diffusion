@@ -20,7 +20,7 @@ This code has been adapted from https://github.com/CompVis/latent-diffusion
 
 # Quick Start
 
-For getting started quickly, this sections decribes how to generate images using pretrained diffusion models. The steps are as follows:
+For getting started quickly, this sections decribes how to generate images using a pretrained decoder and diffusion model. The steps are as follows:
 
 1. Setup the python environment according to [this](#environment-setup) section
 2. Download the pretrained decoder model `jepa_decoder_epoch_150.ckpt` from [here](https://drive.google.com/file/d/13eOakawexnv8EZl_cw4mHlxDyXryol9_/view?usp=drive_link) and the diffuion model trained on JEPA Embeddings `unconditional_epoch_150_jepa.ckpt` from [here](https://drive.google.com/file/d/1mYi37dMe5F94RBXdLIsOd7iAIgKz91_P/view?usp=drive_link).
