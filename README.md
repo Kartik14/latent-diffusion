@@ -6,6 +6,17 @@ This code has been adapted from https://github.com/CompVis/latent-diffusion
 
 ![Unconditional Image Generation with IJEPA and MAE](img/uc_ima.png)
 
+# Table of Contents
+
+1. [Environment Setup](#environment-setup)
+2. [Datasets](#datasets)
+3. [Download Pretrained Encoders](#download-pretrained-encoders)
+4. [AFHQ Encoder Embeddings](#afhq-encoder-embeddings)
+5. [VAE Training](#vae-training)
+6. [Decoder Training](#decoder-training)
+7. [Diffusion Model Training](#diffusion-model-training)
+8. [Image Generation](#image-generation)
+
 # Environment Setup
 
 To setup the environment, run the following commands
@@ -36,11 +47,11 @@ kaggle datasets download -d andrewmvd/animal-faces
 It contains about 16k high quality images of Animal faces. Once the dataset is download, move it into the `data/afhq` directory and create two files `train.txt` and `val.txt` inside `data/afhq` containing the relative paths to the train and val images respectively.
 
 
-# Download the IJEPA and MAE Encoders
+# Download Pretrained Encoders
 
 The IJEPA encoder can be downloaded from [here](https://github.com/facebookresearch/ijepa) and MAE can be downloaded from [here](https://github.com/facebookresearch/mae). We use the ViT-Huge variant for our experiments.
 
-# Extract and save the encoder embeddings on AFHQ
+# AFHQ Encoder Embeddings
 
 To extract and save the embeddings for the AFHQ dataset, run the following commands for train and validation images:
 
@@ -83,7 +94,7 @@ For training a class-conditional diffusion model, run the following command:
 python main.py --base configs/latent-diffusion/afhq-ldm-kl-15-jepa-cc.yaml -t --gpus 0,
 ```
 
-# Sample Images using a trained Diffusion model
+# Image Generation
 
 Once the diffusion model is trained, to sample 5000 images unconditionally with 200 DDIM steps, run the following command:
 
