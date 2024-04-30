@@ -94,7 +94,7 @@ python train_vae.py --train_data saved_embeds/mae_afhq_embeds_train.npy --val_da
 ```
 For MAE Encoder
 ```
-python train_vae.py --train_data saved_embeds/mae_afhq_embeds_train.npy --val_data saved_embeds/mae_afhq_embeds_val.npy --epochs 10 --learning_rate 0.01 
+python train_vae.py --train_data saved_embeds/mae_afhq_embeds_train.npy --val_data saved_embeds/mae_afhq_embeds_val.npy --epochs 10 --learning_rate 0.01
 ```
 
 
@@ -135,6 +135,29 @@ python scripts/sample_diffusion.py -r logs/2024-04-24T18-31-43_afhq-ldm-kl-16-je
 
 For conditional generation, run the same command with a diffusion model that has been trained for unconditional generation. It will generate 5000/3 samples from each of the three image classes of AFHQ.
 
+# Evaluation 
+
+Once the images are generated, say for jepa model trained on 100 epochs, move them to the following folder for unconditional 
+```
+sampled_images/unconditional/jepa/100/
+```
+and for conditional
+```
+sampled_images/conditional/jepa/100/
+Some sample images are given for reference in the folder.
+```
+To run evaluation, first preprocess the real images and train a resnet model, by running the following code,
+```
+python3 save_images_acts_npz.py 
+python3 train_resnet_afhq.py
+```
+Then to generate evaluation in csv format, run,
+```
+python3 evaluate_conditional.py --epoch 100 
+```
+```
+python3 evaluate_unconditional.py --epoch 100
+```
 
 # Pretrained Models
 
