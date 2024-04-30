@@ -49,7 +49,7 @@ model:
         val_embeds_dict: "saved_embeds/jepa_afhq_embeds_val.npy"
         quant_conv_ckpt: "logs/vae_output_latent_dim_16_kl_0.05_lr_0.01/vae_99.pth"
         monitor: "val/rec_loss"
-        ckpt_path: "logs/2024-04-23T20-46-45_autoencoder_kl_16x16x16_afhq_vae/checkpoints/epoch=000092.ckpt"
+        ckpt_path: "logs/2024-04-27T20-50-12_autoencoder_kl_16x16x16_afhq_vae_jepa/checkpoints/epoch=000149.ckpt"
         ddconfig:
           double_z: True
           z_channels: 16

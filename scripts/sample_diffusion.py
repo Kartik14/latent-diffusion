@@ -1,3 +1,4 @@
+import json
 import argparse, os, sys, glob, datetime, yaml
 import torch
 import time
@@ -273,10 +274,9 @@ def get_parser():
     )
     parser.add_argument(
         "--ckpt",
-        type=int,
+        type=str,
         nargs="?",
         help="checkpoint to load",
-        default=10,
     )
     parser.add_argument(
         "-a",
@@ -310,6 +310,18 @@ def get_parser():
         nargs="?",
         help="number of steps for ddim and fastdpm sampling",
         default=50,
+    )
+    parser.add_argument(
+        "--config",
+        type=str,
+        help="config file to use",
+        default=None,
+    )
+    parser.add_argument(
+        "--decoder_path",
+        type=str,
+        help="path to image decoder",
+        default=None,
     )
     parser.add_argument("--batch_size", type=int, nargs="?", help="the bs", default=10)
     return parser
@@ -345,26 +357,40 @@ if __name__ == "__main__":
     opt, unknown = parser.parse_known_args()
     ckpt = None
 
-    logdir = opt.resume
+    if opt.logdir is None:
+        logdir = opt.resume
+        os.makedirs(logdir, exist_ok=True)
+    else:
+        logdir = opt.logdir
     print(logdir)
     if opt.allcheckpoints:
         checkpoints = glob.glob(os.path.join(logdir, "checkpoints", "*.ckpt"))
     else:
-        filename = (
-            logdir
-            + "/checkpoints/"
-            + f"epoch={''.join(['0']*(6 - len(str(opt.ckpt))))+ str(opt.ckpt)}.ckpt"
-        )
+        if os.path.exists(opt.ckpt):
+            filename = opt.ckpt
+        else:
+            filename = (
+                logdir
+                + "/checkpoints/"
+                + f"epoch={''.join(['0']*(6 - len(opt.ckpt)))+ opt.ckpt}.ckpt"
+            )
         checkpoints = [filename]
         if not os.path.exists(filename):
             raise FileNotFoundError(f"Checkpoint {filename} not found.")
 
-    base_configs = sorted(glob.glob(os.path.join(logdir, "configs", "*-project.yaml")))
+    if opt.config is not None:
+        base_configs = [opt.config]
+    else:
+        base_configs = sorted(
+            glob.glob(os.path.join(logdir, "configs", "*-project.yaml"))
+        )
     opt.base = base_configs
 
     configs = [OmegaConf.load(cfg) for cfg in opt.base]
     cli = OmegaConf.from_dotlist(unknown)
     config = OmegaConf.merge(*configs, cli)
+    if opt.decoder_path is not None:
+        config.model.params.first_stage_config.params.ckpt_path = opt.decoder_path
 
     gpu = True
     eval_mode = True
@@ -378,7 +404,6 @@ if __name__ == "__main__":
         )
         logdir = os.path.join(opt.logdir, locallog)
 
-    print(config)
     sdir = os.path.join(logdir, "samples_" + now)
     os.makedirs(sdir)
     samplesdir = os.path.join(sdir, "img")
