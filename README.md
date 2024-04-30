@@ -91,7 +91,7 @@ To train a VAE on top of the IJEPA or MAE Encoder, run the following command:
 For JEPA Encoder
 ```
 python train_vae.py --train_data saved_embeds/mae_afhq_embeds_train.npy --val_data saved_embeds/jepa_afhq_embeds_val.npy --epochs 10 --learning_rate 0.01
-
+```
 For MAE Encoder
 ```
 python train_vae.py --train_data saved_embeds/mae_afhq_embeds_train.npy --val_data saved_embeds/mae_afhq_embeds_val.npy --epochs 10 --learning_rate 0.01
