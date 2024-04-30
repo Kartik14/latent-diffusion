@@ -68,11 +68,14 @@ The IJEPA encoder can be downloaded from [here](https://github.com/facebookresea
 
 To extract and save the embeddings for the AFHQ dataset, run the following commands for train and validation images:
 
+For JEPA Encoder
 ```
 python get_embds.py jepa_weights/vit_huge_14.pth data/afhq/train.txt jepa_afhq_embeds_train.npy
 
 python get_embds.py jepa_weights/vit_huge_14.pth data/afhq/val.txt jepa_afhq_embeds_val.npy
 ```
+
+For MAE Encoder
 ```
 python get_embds.py mae_weights/vit_huge_14.pth data/afhq/train.txt mae_afhq_embeds_train.npy
 
@@ -85,10 +88,12 @@ Assuming the `jepa_weights/vit_huge_14.pth` is the path to the saved IJEPA Encod
 
 To train a VAE on top of the IJEPA or MAE Encoder, run the following command:
 
+For JEPA Encoder
 ```
 python train_vae.py --train_data saved_embeds/mae_afhq_embeds_train.npy --val_data saved_embeds/jepa_afhq_embeds_val.npy --epochs 10 --learning_rate 0.01
 
-
+For MAE Encoder
+```
 python train_vae.py --train_data saved_embeds/mae_afhq_embeds_train.npy --val_data saved_embeds/mae_afhq_embeds_val.npy --epochs 10 --learning_rate 0.01
 ```
 
